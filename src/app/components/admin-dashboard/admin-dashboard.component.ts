@@ -446,13 +446,15 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     downloadCSV() {
         if (this.entries.length === 0) return;
 
-        const headers = ['Full Name', 'ID', 'Purpose', 'Check-In', 'Check-Out'];
+        const headers = ['Full Name', 'ID', 'Purpose', 'Check-In', 'Check-Out', 'Duration', 'Status'];
         const rows = this.entries.map(e => [
             e.name,
             e.studentId,
             e.purpose || 'N/A',
             e.timestamp ? new Date(e.timestamp).toLocaleString() : '',
-            e.checkOutTimestamp ? new Date(e.checkOutTimestamp).toLocaleString() : 'N/A'
+            e.checkOutTimestamp ? new Date(e.checkOutTimestamp).toLocaleString() : 'N/A',
+            this.getDuration(e),
+            e.checkOutTimestamp ? 'Left' : 'Inside'
         ]);
 
         const csvContent = [
@@ -887,6 +889,29 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
         return this.getUnpaidFines().reduce((sum, b) => {
             return sum + (b.fineAmount || 0) + (b.lostPenalty || 0);
         }, 0);
+    }
+
+    // Book view sub-sections (Book Management / Borrow & Return / Users)
+    bookView: 'catalog' | 'borrow' | 'users' = 'catalog';
+
+    // Sidebar navigation helpers
+    navigateTo(view: string, sectionId?: string | null, bookView?: 'catalog' | 'borrow' | 'users') {
+        this.setActiveView(view);
+        if (view === 'books' && bookView) {
+            this.bookView = bookView;
+        }
+        this.isMobileMenuOpen = false;
+
+        if (sectionId) {
+            setTimeout(() => this.scrollToSection(sectionId), 150);
+        }
+    }
+
+    scrollToSection(sectionId: string) {
+        const el = document.getElementById(sectionId);
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     }
 
 

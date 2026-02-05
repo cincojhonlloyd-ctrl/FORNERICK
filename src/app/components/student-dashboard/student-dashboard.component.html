@@ -488,6 +488,76 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Borrowing History -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <h2 class="text-lg font-bold text-slate-800 mb-4">Borrowing History</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+                                    <th class="px-4 py-3 font-semibold">Book</th>
+                                    <th class="px-4 py-3 font-semibold">Status</th>
+                                    <th class="px-4 py-3 font-semibold">Borrowed</th>
+                                    <th class="px-4 py-3 font-semibold">Due Date</th>
+                                    <th class="px-4 py-3 font-semibold">Returned</th>
+                                    <th class="px-4 py-3 font-semibold text-right">Fine</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr *ngFor="let borrow of myBorrows" class="hover:bg-slate-50/50 transition-colors">
+                                    <td class="px-4 py-3 text-sm text-slate-800 font-medium">
+                                        {{ borrow.bookTitle }}
+                                    </td>
+                                    <td class="px-4 py-3 text-xs">
+                                        <span *ngIf="borrow.status === 'pending'"
+                                            class="px-2 py-1 rounded-full bg-amber-100 text-amber-700 font-semibold">
+                                            Pending
+                                        </span>
+                                        <span *ngIf="borrow.status === 'approved'"
+                                            class="px-2 py-1 rounded-full bg-sky-100 text-sky-700 font-semibold">
+                                            Borrowed
+                                        </span>
+                                        <span *ngIf="borrow.status === 'returned'"
+                                            class="px-2 py-1 rounded-full bg-emerald-100 text-emerald-700 font-semibold">
+                                            Returned
+                                        </span>
+                                        <span *ngIf="borrow.status === 'rejected'"
+                                            class="px-2 py-1 rounded-full bg-slate-100 text-slate-700 font-semibold">
+                                            Rejected
+                                        </span>
+                                        <span *ngIf="borrow.status === 'lost'"
+                                            class="px-2 py-1 rounded-full bg-red-100 text-red-700 font-semibold">
+                                            Lost
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-slate-600">
+                                        {{ borrow.borrowDate | date:'shortDate' }}
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-slate-600">
+                                        {{ borrow.dueDate | date:'shortDate' }}
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-slate-600">
+                                        {{ borrow.returnDate ? (borrow.returnDate | date:'shortDate') : '—' }}
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-right text-slate-800 font-semibold">
+                                        <ng-container *ngIf="(borrow.fineAmount || borrow.lostPenalty); else noFine">
+                                            ₱{{ ((borrow.fineAmount || 0) + (borrow.lostPenalty || 0)).toFixed(2) }}
+                                        </ng-container>
+                                        <ng-template #noFine>
+                                            <span class="text-slate-400 text-xs">—</span>
+                                        </ng-template>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="myBorrows.length === 0">
+                                    <td colspan="6" class="px-4 py-6 text-center text-slate-400 text-sm">
+                                        No borrow history yet.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </main>

@@ -20,45 +20,125 @@
             </button>
         </div>
 
-        <nav class="flex-1 px-4 space-y-2 mt-4">
-            <a [routerLink]="[]" [queryParams]="{view: 'dashboard'}" queryParamsHandling="merge"
-                (click)="isMobileMenuOpen = false" [class.bg-slate-800]="activeView === 'dashboard'"
-                [class.text-white]="activeView === 'dashboard'" [class.shadow-lg]="activeView === 'dashboard'"
-                [class.shadow-slate-900/50]="activeView === 'dashboard'"
-                [class.text-slate-400]="activeView !== 'dashboard'"
-                [class.hover:text-white]="activeView !== 'dashboard'"
-                [class.hover:bg-slate-800/50]="activeView !== 'dashboard'"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all cursor-pointer w-full text-left relative z-10">
-                <svg class="w-5 h-5" [class.text-sky-400]="activeView === 'dashboard'" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
+        <nav class="flex-1 px-4 pt-4 pb-2 space-y-1 overflow-y-auto">
+            <!-- Dashboard -->
+            <button (click)="navigateTo('dashboard')"
+                class="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-left transition-all cursor-pointer"
+                [ngClass]="activeView === 'dashboard'
+                    ? 'bg-slate-800 text-white shadow-lg shadow-slate-900/50'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800/50'">
+                <svg class="w-5 h-5" [ngClass]="{'text-sky-400': activeView === 'dashboard'}" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                 </svg>
                 <span class="font-medium">Dashboard</span>
-            </a>
-            <a [routerLink]="[]" [queryParams]="{view: 'books'}" queryParamsHandling="merge"
-                (click)="isMobileMenuOpen = false" [class.bg-slate-800]="activeView === 'books'"
-                [class.text-white]="activeView === 'books'" [class.shadow-lg]="activeView === 'books'"
-                [class.shadow-slate-900/50]="activeView === 'books'" [class.text-slate-400]="activeView !== 'books'"
-                [class.hover:text-white]="activeView !== 'books'" [class.hover:bg-slate-800/50]="activeView !== 'books'"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all cursor-pointer w-full text-left relative z-10">
-                <svg class="w-5 h-5" [class.text-sky-400]="activeView === 'books'" fill="none" viewBox="0 0 24 24"
+            </button>
+
+            <!-- Book Management -->
+            <button (click)="navigateTo('books', null, 'catalog')"
+                class="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-left transition-all cursor-pointer"
+                [ngClass]="activeView === 'books' && bookView === 'catalog'
+                    ? 'bg-slate-800 text-white shadow-lg shadow-slate-900/50'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800/50'">
+                <svg class="w-5 h-5" [ngClass]="{'text-sky-400': activeView === 'books'}" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
-                <span>Book Catalog</span>
-            </a>
-            <a routerLink="/reports" (click)="isMobileMenuOpen = false"
-                class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
+                <span class="font-medium">Book Management</span>
+            </button>
+
+            <!-- Borrow & Return -->
+            <button (click)="navigateTo('books', null, 'borrow')"
+                class="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-left transition-all cursor-pointer"
+                [ngClass]="activeView === 'books' && bookView === 'borrow'
+                    ? 'bg-slate-800 text-white shadow-lg shadow-slate-900/50'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800/50'">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        d="M4 7h13m0 0l-3-3m3 3l-3 3M20 17H7m0 0l3-3m-3 3l3 3" />
                 </svg>
-                <span>Reports</span>
+                <span class="font-medium">Borrow &amp; Return</span>
+            </button>
+
+            <!-- Library Entry Logs -->
+            <button (click)="navigateTo('dashboard', 'entry-logs-section')"
+                class="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-left transition-all cursor-pointer"
+                [ngClass]="activeView === 'dashboard'
+                    ? 'bg-slate-800 text-white shadow-lg shadow-slate-900/50'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800/50'">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5A2 2 0 003 7v12a2 2 0 002 2z" />
+                </svg>
+                <span class="font-medium">Library Entry Logs</span>
+            </button>
+
+            <!-- Users / Members -->
+            <button (click)="navigateTo('books', null, 'users')"
+                class="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-left transition-all cursor-pointer"
+                [ngClass]="activeView === 'books' && bookView === 'users'
+                    ? 'bg-slate-800 text-white shadow-lg shadow-slate-900/50'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800/50'">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-1a4 4 0 00-4-4h-1m-4 5H2v-1a4 4 0 014-4h4m4-9a4 4 0 11-8 0 4 4 0 018 0zm6 4a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span class="font-medium">Users / Members</span>
+            </button>
+
+            <!-- Reports & Analytics -->
+            <a routerLink="/reports" (click)="isMobileMenuOpen = false"
+                class="flex items-center gap-3 px-4 py-3 w-full rounded-xl transition-all cursor-pointer"
+                [ngClass]="'text-slate-400 hover:text-white hover:bg-slate-800/50'">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm6 0V9a2 2 0 00-2-2h-2a2 2 0 00-2 2v10m8 0a2 2 0 002-2V5a2 2 0 012-2h0a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <span class="font-medium">Reports &amp; Analytics</span>
             </a>
+
+            <!-- Notifications -->
+            <button (click)="navigateTo('notifications')"
+                class="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-left transition-all cursor-pointer"
+                [ngClass]="activeView === 'notifications'
+                    ? 'bg-slate-800 text-white shadow-lg shadow-slate-900/50'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800/50'">
+                <svg class="w-5 h-5" [ngClass]="{'text-sky-400': activeView === 'notifications'}" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1" />
+                </svg>
+                <span class="font-medium">Notifications</span>
+            </button>
         </nav>
 
+        <!-- Bottom actions -->
+        <div class="px-4 pt-2 pb-6 border-t border-slate-800 space-y-2">
+            <button (click)="navigateTo('settings')"
+                class="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-left transition-all cursor-pointer"
+                [ngClass]="activeView === 'settings'
+                    ? 'bg-slate-800 text-white shadow-lg shadow-slate-900/50'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800/50'">
+                <svg class="w-5 h-5" [ngClass]="{'text-sky-400': activeView === 'settings'}" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M11.049 2.927c.3-1.14 1.603-1.14 1.902 0l.2.76a1 1 0 00.95.69h.8a1 1 0 01.707.293l.566.566a1 1 0 01.293.707v.8a1 1 0 00.69.95l.76.2c1.14.3 1.14 1.603 0 1.902l-.76.2a1 1 0 00-.69.95v.8a1 1 0 01-.293.707l-.566.566a1 1 0 01-.707.293h-.8a1 1 0 00-.95.69l-.2.76c-.3 1.14-1.603 1.14-1.902 0l-.2-.76a1 1 0 00-.95-.69h-.8a1 1 0 01-.707-.293l-.566-.566a1 1 0 01-.293-.707v-.8a1 1 0 00-.69-.95l-.76-.2c-1.14-.3-1.14-1.603 0-1.902l.76-.2a1 1 0 00.69-.95v-.8a1 1 0 01.293-.707l.566-.566a1 1 0 01.707-.293h.8a1 1 0 00.95-.69l.2-.76z" />
+                    <circle cx="12" cy="12" r="3" />
+                </svg>
+                <span class="font-medium">Settings</span>
+            </button>
+
+            <button (click)="onLogout()"
+                class="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-left transition-all cursor-pointer text-rose-400 hover:bg-slate-800/50 hover:text-rose-300">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span class="font-medium">Logout</span>
+            </button>
+        </div>
 
     </aside>
 
@@ -78,8 +158,12 @@
                 </button>
 
                 <h1 class="text-lg md:text-xl font-bold text-slate-800 truncate">
-                    <span *ngIf="activeView === 'dashboard'">Overview</span>
-                    <span *ngIf="activeView === 'books'">Book Catalog & Borrowing</span>
+                    <span *ngIf="activeView === 'dashboard'">Dashboard Overview</span>
+                    <span *ngIf="activeView === 'books' && bookView === 'catalog'">Book Management</span>
+                    <span *ngIf="activeView === 'books' && bookView === 'borrow'">Borrow &amp; Return</span>
+                    <span *ngIf="activeView === 'books' && bookView === 'users'">Users / Members</span>
+                    <span *ngIf="activeView === 'notifications'">Notifications Center</span>
+                    <span *ngIf="activeView === 'settings'">Library Settings</span>
                 </h1>
             </div>
 
@@ -101,6 +185,15 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
+                </button>
+                <!-- Always-visible Logout button -->
+                <button (click)="onLogout()"
+                    class="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-slate-700 border border-slate-200 rounded-full hover:bg-slate-100 hover:text-red-600 hover:border-red-200 transition-colors">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Logout
                 </button>
                 <div class="relative">
                     <button (click)="toggleProfileMenu()"
@@ -198,7 +291,7 @@
                 </div>
 
                 <!-- Logs Table -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div id="entry-logs-section" class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                     <div class="p-6 border-b border-slate-100 flex items-center justify-between">
                         <h3 class="text-slate-800 font-bold">Recent Entry Logs</h3>
                         <button (click)="downloadCSV()"
@@ -281,7 +374,8 @@
             <div *ngIf="activeView === 'books'" class="space-y-8">
 
                 <!-- Book Management Section -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div *ngIf="bookView === 'catalog'" id="book-management-section"
+                    class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                     <div class="p-6 border-b border-slate-100">
                         <h3 class="text-slate-800 font-bold">Book Catalog Management</h3>
                     </div>
@@ -441,7 +535,8 @@
                 </div>
 
                 <!-- Borrowing Management Section -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div *ngIf="bookView === 'borrow'" id="borrow-management-section"
+                    class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                     <div class="p-6 border-b border-slate-100">
                         <h3 class="text-slate-800 font-bold">Book Borrowing Management</h3>
                     </div>
@@ -595,7 +690,8 @@
                 </div>
 
                 <!-- Student Directory Table -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div *ngIf="bookView === 'users'" id="users-section"
+                    class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                     <div class="p-6 border-b border-slate-100">
                         <h3 class="text-slate-800 font-bold">Registered Students Directory</h3>
                     </div>
@@ -645,6 +741,117 @@
 
             </div>
             <!-- End Book Catalog View -->
+
+            <!-- Notifications View -->
+            <div *ngIf="activeView === 'notifications'" class="space-y-8">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+                        <div>
+                            <h3 class="text-slate-800 font-bold">Notifications Center</h3>
+                            <p class="text-slate-500 text-sm mt-1">System-generated alerts based on borrowing and fines.</p>
+                        </div>
+                    </div>
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                            <p class="text-xs font-semibold text-slate-500 uppercase mb-1">Overdue Borrowings</p>
+                            <p class="text-3xl font-bold text-rose-600">
+                                {{ getBorrowsWithFines().length }}
+                            </p>
+                            <p class="text-xs text-slate-500 mt-2">Students with overdue books or penalties.</p>
+                        </div>
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                            <p class="text-xs font-semibold text-slate-500 uppercase mb-1">Unpaid Fines</p>
+                            <p class="text-3xl font-bold text-amber-600">
+                                ₱{{ getTotalUnpaidFines() | number:'1.0-2' }}
+                            </p>
+                            <p class="text-xs text-slate-500 mt-2">Total outstanding fines across all members.</p>
+                        </div>
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                            <p class="text-xs font-semibold text-slate-500 uppercase mb-1">Pending Borrow Requests</p>
+                            <p class="text-3xl font-bold text-sky-600">
+                                {{ getPendingBorrows().length }}
+                            </p>
+                            <p class="text-xs text-slate-500 mt-2">Requests awaiting approval from librarians.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+                        <h3 class="text-slate-800 font-bold">Actionable Alerts</h3>
+                        <p class="text-xs text-slate-500">Use these to follow up with students.</p>
+                    </div>
+                    <div class="p-6 space-y-3 max-h-[420px] overflow-y-auto">
+                        <div *ngFor="let borrow of getBorrowsWithFines()"
+                            class="flex items-start justify-between gap-4 p-4 rounded-xl border border-slate-100 bg-slate-50">
+                            <div>
+                                <p class="text-sm font-semibold text-slate-800">
+                                    {{ borrow.studentName }} &mdash; {{ borrow.bookTitle }}
+                                </p>
+                                <p class="text-xs text-slate-500 mt-1">
+                                    Due {{ borrow.dueDate | date:'mediumDate' }}
+                                    <span *ngIf="borrow.daysOverdue"> &middot; {{ borrow.daysOverdue }} days overdue</span>
+                                </p>
+                                <p class="text-xs text-rose-600 mt-1" *ngIf="borrow.fineAmount">
+                                    Current fine: ₱{{ borrow.fineAmount.toFixed(2) }}
+                                </p>
+                            </div>
+                            <div class="flex flex-col gap-2 items-end">
+                                <button *ngIf="borrow.status === 'approved'"
+                                    (click)="sendOverdueReminder(borrow)"
+                                    class="px-3 py-1.5 rounded-full bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold">
+                                    Send Reminder
+                                </button>
+                                <span *ngIf="borrow.fineStatus === 'unpaid'"
+                                    class="px-2 py-1 rounded-full bg-rose-100 text-rose-700 text-[11px] font-semibold">
+                                    Fine Unpaid
+                                </span>
+                            </div>
+                        </div>
+                        <div *ngIf="getBorrowsWithFines().length === 0" class="py-10 text-center text-slate-400 text-sm">
+                            No critical alerts at the moment.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings View -->
+            <div *ngIf="activeView === 'settings'" class="space-y-8">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="p-6 border-b border-slate-100">
+                        <h3 class="text-slate-800 font-bold">Library Settings</h3>
+                        <p class="text-slate-500 text-sm mt-1">
+                            Configure borrowing policies and operational preferences for the library.
+                        </p>
+                    </div>
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <h4 class="text-sm font-semibold text-slate-700">Borrowing Limits</h4>
+                            <p class="text-xs text-slate-500">
+                                Control how many books a student or staff member can borrow and for how long.
+                            </p>
+                        </div>
+                        <div class="space-y-2">
+                            <h4 class="text-sm font-semibold text-slate-700">Fine Rules</h4>
+                            <p class="text-xs text-slate-500">
+                                Define overdue penalties, lost book fees, and grace periods for returns.
+                            </p>
+                        </div>
+                        <div class="space-y-2">
+                            <h4 class="text-sm font-semibold text-slate-700">Library Hours</h4>
+                            <p class="text-xs text-slate-500">
+                                Document official opening hours and special schedules for events or exams.
+                            </p>
+                        </div>
+                        <div class="space-y-2">
+                            <h4 class="text-sm font-semibold text-slate-700">Backups &amp; Maintenance</h4>
+                            <p class="text-xs text-slate-500">
+                                Coordinate database backup routines and maintenance windows with IT.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
     </main>

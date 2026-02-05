@@ -67,6 +67,9 @@ export class ReportsComponent implements OnInit, OnDestroy {
   public categoryChartData: any = { labels: [], datasets: [] };
   public borrowTrendChartData: any = { labels: [], datasets: [] };
 
+  // Visit purpose distribution (for visit purposes requirement)
+  public purposeChartData: any = { labels: [], datasets: [] };
+
   public barChartOptions: any = {
     responsive: true,
     plugins: {
@@ -243,6 +246,30 @@ export class ReportsComponent implements OnInit, OnDestroy {
         data: data,
         backgroundColor: '#8b5cf6',
         borderRadius: 4
+      }]
+    };
+
+    // Visit Purpose Distribution (within selected range)
+    const purposeMap: { [key: string]: number } = {};
+    this.entries.forEach(e => {
+      const p = e.purpose || 'Study';
+      purposeMap[p] = (purposeMap[p] || 0) + 1;
+    });
+
+    this.purposeChartData = {
+      labels: Object.keys(purposeMap),
+      datasets: [{
+        data: Object.values(purposeMap),
+        backgroundColor: [
+          '#38bdf8', // Sky
+          '#10b981', // Emerald
+          '#818cf8', // Indigo
+          '#f43f5e', // Rose
+          '#fbbf24', // Amber
+          '#a78bfa'  // Violet
+        ],
+        borderWidth: 0,
+        hoverOffset: 15
       }]
     };
   }

@@ -20,25 +20,108 @@
             </button>
         </div>
 
-        <nav class="flex-1 px-4 space-y-2 mt-4">
+        <nav class="flex-1 px-4 pt-4 pb-2 space-y-1 overflow-y-auto">
+            <!-- Dashboard -->
             <a routerLink="/admin" (click)="isMobileMenuOpen = false"
-                class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
+                routerLinkActive="bg-slate-800 text-white shadow-lg shadow-slate-900/50"
+                [routerLinkActiveOptions]="{ exact: true }"
+                class="flex items-center gap-3 px-4 py-3 w-full rounded-xl transition-all cursor-pointer text-slate-400 hover:text-white hover:bg-slate-800/50">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                 </svg>
                 <span class="font-medium">Dashboard</span>
             </a>
+
+            <!-- Book Management (admin view=books) -->
+            <a [routerLink]="['/admin']" [queryParams]="{ view: 'books' }" queryParamsHandling="merge"
+                (click)="isMobileMenuOpen = false"
+                class="flex items-center gap-3 px-4 py-3 w-full rounded-xl transition-all cursor-pointer text-slate-400 hover:text-white hover:bg-slate-800/50">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <span class="font-medium">Book Management</span>
+            </a>
+
+            <!-- Borrow & Return (admin view=books) -->
+            <a [routerLink]="['/admin']" [queryParams]="{ view: 'books' }" queryParamsHandling="merge"
+                (click)="isMobileMenuOpen = false"
+                class="flex items-center gap-3 px-4 py-3 w-full rounded-xl transition-all cursor-pointer text-slate-400 hover:text-white hover:bg-slate-800/50">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 7h13m0 0l-3-3m3 3l-3 3M20 17H7m0 0l3-3m-3 3l3 3" />
+                </svg>
+                <span class="font-medium">Borrow &amp; Return</span>
+            </a>
+
+            <!-- Library Entry Logs (admin dashboard) -->
+            <a routerLink="/admin"
+                (click)="isMobileMenuOpen = false"
+                class="flex items-center gap-3 px-4 py-3 w-full rounded-xl transition-all cursor-pointer text-slate-400 hover:text-white hover:bg-slate-800/50">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5A2 2 0 003 7v12a2 2 0 002 2z" />
+                </svg>
+                <span class="font-medium">Library Entry Logs</span>
+            </a>
+
+            <!-- Users / Members (admin view=books) -->
+            <a [routerLink]="['/admin']" [queryParams]="{ view: 'books' }" queryParamsHandling="merge"
+                (click)="isMobileMenuOpen = false"
+                class="flex items-center gap-3 px-4 py-3 w-full rounded-xl transition-all cursor-pointer text-slate-400 hover:text-white hover:bg-slate-800/50">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-1a4 4 0 00-4-4h-1m-4 5H2v-1a4 4 0 014-4h4m4-9a4 4 0 11-8 0 4 4 0 018 0zm6 4a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span class="font-medium">Users / Members</span>
+            </a>
+
+            <!-- Reports & Analytics (current page) -->
             <a routerLink="/reports" (click)="isMobileMenuOpen = false"
-                class="flex items-center gap-3 px-4 py-3 bg-slate-800 text-white rounded-xl transition-all shadow-lg shadow-slate-900/50">
+                routerLinkActive="bg-slate-800 text-white shadow-lg shadow-slate-900/50"
+                class="flex items-center gap-3 px-4 py-3 w-full rounded-xl transition-all cursor-pointer text-slate-400 hover:text-white hover:bg-slate-800/50">
                 <svg class="w-5 h-5 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm6 0V9a2 2 0 00-2-2h-2a2 2 0 00-2 2v10m8 0a2 2 0 002-2V5a2 2 0 012-2h0a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
-                <span>Reports</span>
+                <span class="font-medium">Reports &amp; Analytics</span>
+            </a>
+
+            <!-- Notifications (admin view=notifications) -->
+            <a [routerLink]="['/admin']" [queryParams]="{ view: 'notifications' }" queryParamsHandling="merge"
+                (click)="isMobileMenuOpen = false"
+                class="flex items-center gap-3 px-4 py-3 w-full rounded-xl transition-all cursor-pointer text-slate-400 hover:text-white hover:bg-slate-800/50">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1" />
+                </svg>
+                <span class="font-medium">Notifications</span>
             </a>
         </nav>
 
+        <!-- Bottom actions -->
+        <div class="px-4 pt-2 pb-6 border-t border-slate-800 space-y-2">
+            <a [routerLink]="['/admin']" [queryParams]="{ view: 'settings' }" queryParamsHandling="merge"
+                (click)="isMobileMenuOpen = false"
+                class="flex items-center gap-3 px-4 py-3 w-full rounded-xl transition-all cursor-pointer text-slate-400 hover:text-white hover:bg-slate-800/50">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M11.049 2.927c.3-1.14 1.603-1.14 1.902 0l.2.76a1 1 0 00.95.69h.8a1 1 0 01.707.293l.566.566a1 1 0 01.293.707v.8a1 1 0 00.69.95l.76.2c1.14.3 1.14 1.603 0 1.902l-.76.2a1 1 0 00-.69.95v.8a1 1 0 01-.293.707l-.566.566a1 1 0 01-.707.293h-.8a1 1 0 00-.95.69l-.2.76c-.3 1.14-1.603 1.14-1.902 0l-.2-.76a1 1 0 00-.95-.69h-.8a1 1 0 01-.707-.293l-.566-.566a1 1 0 01-.293-.707v-.8a1 1 0 00-.69-.95l-.76-.2c-1.14-.3-1.14-1.603 0-1.902l.76-.2a1 1 0 00.69-.95v-.8a1 1 0 01.293-.707l.566-.566a1 1 0 01.707-.293h.8a1 1 0 00.95-.69l.2-.76z" />
+                    <circle cx="12" cy="12" r="3" />
+                </svg>
+                <span class="font-medium">Settings</span>
+            </a>
+
+            <button (click)="onLogout()"
+                class="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-left transition-all cursor-pointer text-rose-400 hover:bg-slate-800/50 hover:text-rose-300">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span class="font-medium">Logout</span>
+            </button>
+        </div>
 
     </aside>
 
@@ -151,6 +234,15 @@
                             <canvas baseChart [data]="categoryChartData" [options]="doughnutChartOptions"
                                 [type]="'doughnut'"></canvas>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Visit Purposes Distribution -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-6">
+                    <h3 class="text-slate-800 font-bold mb-6">Visit Purposes (Selected Range)</h3>
+                    <div class="h-64 relative">
+                        <canvas baseChart [data]="purposeChartData" [options]="doughnutChartOptions"
+                            [type]="'doughnut'"></canvas>
                     </div>
                 </div>
 
