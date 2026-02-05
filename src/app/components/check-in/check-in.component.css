@@ -1,0 +1,60 @@
+/* Custom Animations for Check-In Component */
+
+@keyframes scan {
+
+    0%,
+    100% {
+        top: 0;
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    50% {
+        top: 100%;
+        opacity: 1;
+    }
+
+    90% {
+        top: 0;
+        opacity: 1;
+    }
+}
+
+.animate-scan {
+    animation: scan 3s infinite linear;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-up {
+    animation: slideUp 0.5s ease-out forwards;
+}

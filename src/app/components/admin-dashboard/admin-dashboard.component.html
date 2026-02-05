@@ -1,0 +1,815 @@
+<div class="flex h-screen bg-slate-100 overflow-hidden font-sans relative">
+
+    <!-- Mobile Backdrop -->
+    <div *ngIf="isMobileMenuOpen" (click)="toggleMobileMenu()"
+        class="fixed inset-0 bg-slate-900/50 z-40 md:hidden backdrop-blur-sm transition-opacity"></div>
+
+    <!-- Sidebar (Responsive) -->
+    <aside [class.translate-x-0]="isMobileMenuOpen" [class.-translate-x-full]="!isMobileMenuOpen"
+        class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 border-r border-slate-800 flex flex-col transition-transform duration-300 transform md:relative md:translate-x-0">
+        <div class="p-6 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-sky-500 flex items-center justify-center text-white font-bold">L</div>
+                <h2 class="text-white font-bold text-lg tracking-wide">Library<span class="text-sky-500">.io</span></h2>
+            </div>
+            <!-- Close Button (Mobile Only) -->
+            <button (click)="toggleMobileMenu()" class="md:hidden text-slate-400 hover:text-white">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-2 mt-4">
+            <a [routerLink]="[]" [queryParams]="{view: 'dashboard'}" queryParamsHandling="merge"
+                (click)="isMobileMenuOpen = false" [class.bg-slate-800]="activeView === 'dashboard'"
+                [class.text-white]="activeView === 'dashboard'" [class.shadow-lg]="activeView === 'dashboard'"
+                [class.shadow-slate-900/50]="activeView === 'dashboard'"
+                [class.text-slate-400]="activeView !== 'dashboard'"
+                [class.hover:text-white]="activeView !== 'dashboard'"
+                [class.hover:bg-slate-800/50]="activeView !== 'dashboard'"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all cursor-pointer w-full text-left relative z-10">
+                <svg class="w-5 h-5" [class.text-sky-400]="activeView === 'dashboard'" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+                <span class="font-medium">Dashboard</span>
+            </a>
+            <a [routerLink]="[]" [queryParams]="{view: 'books'}" queryParamsHandling="merge"
+                (click)="isMobileMenuOpen = false" [class.bg-slate-800]="activeView === 'books'"
+                [class.text-white]="activeView === 'books'" [class.shadow-lg]="activeView === 'books'"
+                [class.shadow-slate-900/50]="activeView === 'books'" [class.text-slate-400]="activeView !== 'books'"
+                [class.hover:text-white]="activeView !== 'books'" [class.hover:bg-slate-800/50]="activeView !== 'books'"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all cursor-pointer w-full text-left relative z-10">
+                <svg class="w-5 h-5" [class.text-sky-400]="activeView === 'books'" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <span>Book Catalog</span>
+            </a>
+            <a routerLink="/reports" (click)="isMobileMenuOpen = false"
+                class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <span>Reports</span>
+            </a>
+        </nav>
+
+
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+        <!-- Top Header -->
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-8">
+            <div class="flex items-center gap-4">
+                <!-- Hamburger Menu -->
+                <button (click)="toggleMobileMenu()"
+                    class="md:hidden p-2 -ml-2 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+
+                <h1 class="text-lg md:text-xl font-bold text-slate-800 truncate">
+                    <span *ngIf="activeView === 'dashboard'">Overview</span>
+                    <span *ngIf="activeView === 'books'">Book Catalog & Borrowing</span>
+                </h1>
+            </div>
+
+            <div class="flex items-center gap-2 md:gap-4">
+                <div class="relative hidden sm:block">
+                    <input type="text" [(ngModel)]="searchTerm" (input)="filterEntries()" placeholder="Search logs..."
+                        class="pl-10 pr-4 py-2 bg-slate-100 border border-transparent focus:bg-white focus:border-sky-500 rounded-full text-sm outline-none transition-all w-48 md:w-64 text-slate-900">
+                    <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+                <!-- Mobile Search Trigger (Optional, maybe skip for simplicity or add icon only) -->
+
+                <button (click)="ngOnInit()" class="p-2 text-slate-400 hover:text-sky-500 transition-all"
+                    title="Refresh Data">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                </button>
+                <div class="relative">
+                    <button (click)="toggleProfileMenu()"
+                        class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden border border-slate-300 focus:ring-2 focus:ring-sky-500 focus:outline-none transition-all">
+                        <img src="https://ui-avatars.com/api/?name=Admin+User&background=0D8ABC&color=fff" alt="Admin">
+                    </button>
+
+                    <!-- Backdrop to close (must come before dropdown in DOM) -->
+                    <div *ngIf="isProfileMenuOpen" (click)="isProfileMenuOpen = false"
+                        class="fixed inset-0 z-40 bg-transparent cursor-default"></div>
+
+                    <!-- Profile Dropdown -->
+                    <div *ngIf="isProfileMenuOpen"
+                        class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-1 z-50 animate-fade-in-down">
+                        <div class="px-4 py-3 border-b border-slate-50">
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Signed in as</p>
+                            <p class="text-sm font-bold text-slate-800 truncate">Admin User</p>
+                        </div>
+                        <button (click)="onLogout()"
+                            class="w-full text-left px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 flex items-center gap-2 transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Scrollable Dashboard Content -->
+        <div class="flex-1 overflow-y-auto p-8 space-y-8">
+
+            <!-- Dashboard View -->
+            <div *ngIf="activeView === 'dashboard'">
+
+                <!-- Stats Row -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div
+                        class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group">
+                        <div
+                            class="absolute right-0 top-0 w-32 h-32 bg-sky-50 rounded-full -mr-16 -mt-16 transition-all group-hover:scale-110">
+                        </div>
+                        <h3 class="text-slate-500 text-sm font-medium mb-1 relative z-10">Total Visits Today</h3>
+                        <p class="text-3xl font-bold text-slate-800 relative z-10">{{ totalEntriesToday }}</p>
+                        <div class="mt-4 flex items-center text-xs text-emerald-500 font-medium relative z-10">
+                            <span class="bg-emerald-50 px-2 py-1 rounded-full">+12% from yesterday</span>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group">
+                        <div
+                            class="absolute right-0 top-0 w-32 h-32 bg-emerald-50 rounded-full -mr-16 -mt-16 transition-all group-hover:scale-110">
+                        </div>
+                        <h3 class="text-slate-500 text-sm font-medium mb-1 relative z-10">Currently Inside</h3>
+                        <p class="text-3xl font-bold text-slate-800 relative z-10">{{ currentlyInside }}</p>
+                        <div class="mt-4 flex items-center text-xs text-slate-400 font-medium relative z-10">
+                            <span class="flex items-center gap-1"><span
+                                    class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Live Update</span>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group">
+                        <div
+                            class="absolute right-0 top-0 w-32 h-32 bg-purple-50 rounded-full -mr-16 -mt-16 transition-all group-hover:scale-110">
+                        </div>
+                        <h3 class="text-slate-500 text-sm font-medium mb-1 relative z-10">Last Entry</h3>
+                        <p class="text-3xl font-bold text-slate-800 relative z-10">{{ (lastEntryTime | date:'HH:mm') ||
+                            '--:--' }}</p>
+                        <div class="mt-4 flex items-center text-xs text-slate-400 font-medium relative z-10">
+                            <span>{{ lastEntryTime ? (lastEntryTime | date:'MMM d, y') : 'No activity yet' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" *ngIf="!isLoading && entries.length > 0">
+                    <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <h3 class="text-slate-800 font-bold mb-6">Traffic Overview</h3>
+                        <div class="h-64">
+                            <canvas baseChart [data]="hourlyChartData" [options]="hourlyChartOptions"
+                                [type]="'line'"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <h3 class="text-slate-800 font-bold mb-6">Purpose Distribution</h3>
+                        <div class="h-64">
+                            <canvas baseChart [data]="purposeChartData" [options]="purposeChartOptions"
+                                [type]="'doughnut'"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logs Table -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+                        <h3 class="text-slate-800 font-bold">Recent Entry Logs</h3>
+                        <button (click)="downloadCSV()"
+                            class="text-sm text-sky-600 font-medium hover:text-sky-700 flex items-center gap-1">
+                            Download CSV <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+                                    <th class="px-6 py-4 font-semibold">Student ID</th>
+                                    <th class="px-6 py-4 font-semibold">Name</th>
+                                    <th class="px-6 py-4 font-semibold">Purpose</th>
+                                    <th class="px-6 py-4 font-semibold">Time In</th>
+                                    <th class="px-6 py-4 font-semibold">Time Out</th>
+                                    <th class="px-6 py-4 font-semibold">Duration</th>
+                                    <th class="px-6 py-4 font-semibold">Status</th>
+                                    <th class="px-6 py-4 font-semibold text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr *ngFor="let entry of filteredEntries"
+                                    class="hover:bg-slate-50/50 transition-colors">
+                                    <td class="px-6 py-4 text-sm font-medium text-slate-900 font-mono">{{
+                                        entry.studentId }}
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-slate-600 flex items-center gap-2">
+                                        <div
+                                            class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-500">
+                                            {{ entry.name.charAt(0) }}
+                                        </div>
+                                        {{ entry.name }}
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-slate-500">
+                                        <span class="px-2 py-1 bg-slate-100 rounded text-xs font-medium">{{
+                                            entry.purpose
+                                            }}</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-slate-500">{{ entry.timestamp | date:'shortTime'
+                                        }}
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-slate-500">{{ entry.checkOutTimestamp ?
+                                        (entry.checkOutTimestamp | date:'shortTime') : '--:--' }}</td>
+                                    <td class="px-6 py-4 text-sm text-slate-500">{{ getDuration(entry) }}</td>
+                                    <td class="px-6 py-4">
+                                        <span *ngIf="!entry.checkOutTimestamp"
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                                            Inside
+                                        </span>
+                                        <span *ngIf="entry.checkOutTimestamp"
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
+                                            Left
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button *ngIf="!entry.checkOutTimestamp" (click)="forceCheckout(entry)"
+                                            class="text-xs text-rose-500 hover:text-rose-700 font-medium hover:underline">
+                                            Force Checkout
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="filteredEntries.length === 0 && !isLoading">
+                                    <td colspan="7" class="px-6 py-8 text-center text-slate-400 text-sm">No records
+                                        found.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <!-- End Dashboard View -->
+
+            <div *ngIf="activeView === 'books'" class="space-y-8">
+
+                <!-- Book Management Section -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="p-6 border-b border-slate-100">
+                        <h3 class="text-slate-800 font-bold">Book Catalog Management</h3>
+                    </div>
+                    <div class="p-6">
+                        <form (ngSubmit)="addNewBook()" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Title *</label>
+                                <input type="text" [(ngModel)]="newBook.title" name="title" required
+                                    class="w-full px-4 py-2 bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 rounded-xl outline-none transition-all text-slate-900">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Author *</label>
+                                <input type="text" [(ngModel)]="newBook.author" name="author" required
+                                    class="w-full px-4 py-2 bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 rounded-xl outline-none transition-all text-slate-900">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Category *</label>
+                                <input type="text" [(ngModel)]="newBook.category" name="category" required
+                                    class="w-full px-4 py-2 bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 rounded-xl outline-none transition-all text-slate-900">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">ISBN</label>
+                                <input type="text" [(ngModel)]="newBook.isbn" name="isbn"
+                                    class="w-full px-4 py-2 bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 rounded-xl outline-none transition-all text-slate-900">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Description</label>
+                                <textarea [(ngModel)]="newBook.description" name="description" rows="3"
+                                    class="w-full px-4 py-2 bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 rounded-xl outline-none transition-all text-slate-900"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Cover Image</label>
+                                <div class="flex items-center gap-4">
+                                    <label
+                                        class="relative cursor-pointer bg-white border border-slate-200 hover:border-sky-500 rounded-xl px-4 py-2 transition-all group">
+                                        <span class="text-sm font-medium text-slate-600 group-hover:text-sky-600">Choose
+                                            Image</span>
+                                        <input type="file" (change)="onFileSelected($event, false)" accept="image/*"
+                                            class="hidden">
+                                    </label>
+                                    <span *ngIf="isUploading"
+                                        class="text-xs text-sky-500 font-medium animate-pulse">Uploading...</span>
+                                    <img *ngIf="newBook.coverUrl" [src]="newBook.coverUrl"
+                                        class="h-10 w-10 object-cover rounded-lg border border-slate-200 bg-slate-50">
+                                    <input type="hidden" [(ngModel)]="newBook.coverUrl" name="coverUrl">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Total Copies *</label>
+                                    <input type="number" [(ngModel)]="newBook.totalCopies" name="totalCopies" min="1"
+                                        required
+                                        class="w-full px-4 py-2 bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 rounded-xl outline-none transition-all text-slate-900">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Available *</label>
+                                    <input type="number" [(ngModel)]="newBook.availableCopies" name="availableCopies"
+                                        min="0" required
+                                        class="w-full px-4 py-2 bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 rounded-xl outline-none transition-all text-slate-900">
+                                </div>
+                            </div>
+                            <div class="md:col-span-2">
+                                <button type="submit"
+                                    [disabled]="!newBook.title || !newBook.author || !newBook.category || isAddingBook"
+                                    class="px-6 py-2 bg-sky-500 hover:bg-sky-600 disabled:bg-slate-300 text-white rounded-xl font-medium transition-all">
+                                    {{ isAddingBook ? 'Adding...' : 'Add Book to Catalog' }}
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Search and Filter Controls -->
+                        <div class="mt-6 mb-4 flex flex-col md:flex-row gap-4">
+                            <div class="flex-1">
+                                <div class="relative">
+                                    <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                    <input type="text" [(ngModel)]="bookSearchTerm" (input)="filterBooks()"
+                                        placeholder="Search by title, author, ISBN..."
+                                        class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 rounded-xl outline-none transition-all text-slate-900">
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-4">
+                                <select [(ngModel)]="selectedCategory" (change)="filterBooks()"
+                                    class="px-4 py-2 bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 rounded-xl outline-none transition-all text-slate-900 min-w-[140px]">
+                                    <option value="all">All Categories</option>
+                                    <option *ngFor="let category of getUniqueCategories()" [value]="category">{{
+                                        category }}</option>
+                                </select>
+
+                                <select [(ngModel)]="sortBy" (change)="filterBooks()"
+                                    class="px-4 py-2 bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 rounded-xl outline-none transition-all text-slate-900 min-w-[140px]">
+                                    <option value="title">Sort: A-Z</option>
+                                    <option value="author">Sort: Author</option>
+                                    <option value="date">Sort: Newest</option>
+                                </select>
+
+                                <label
+                                    class="flex items-center gap-2 cursor-pointer bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl hover:bg-slate-100 transition-all select-none">
+                                    <input type="checkbox" [(ngModel)]="showAvailableOnly" (change)="filterBooks()"
+                                        class="w-4 h-4 text-sky-500 rounded focus:ring-sky-500">
+                                    <span class="text-slate-700 font-medium text-sm">Available</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Books List -->
+                        <div class="mt-6">
+                            <h4 class="text-sm font-semibold text-slate-700 mb-3">Current Catalog ({{
+                                filteredBooks.length }}
+                                books)
+                            </h4>
+
+                            <!-- No Results Message -->
+                            <div *ngIf="filteredBooks.length === 0"
+                                class="text-center py-12 bg-slate-50 rounded-2xl border border-slate-200 border-dashed">
+                                <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                                <p class="text-slate-500 font-medium">No books found matching your search</p>
+                                <p class="text-slate-400 text-sm mt-1">Try adjusting your filters or search term</p>
+                                <button (click)="bookSearchTerm = ''; selectedCategory = 'all'; filterBooks()"
+                                    class="mt-4 px-4 py-2 bg-white border border-slate-200 shadow-sm rounded-lg text-sm text-slate-600 hover:text-sky-600 hover:border-sky-200 transition-colors">
+                                    Clear Filters
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div *ngFor="let book of filteredBooks"
+                                    class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                    <h5 class="font-bold text-slate-800 text-sm mb-1">{{ book.title }}</h5>
+                                    <p class="text-xs text-slate-600 mb-2">by {{ book.author }}</p>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="text-xs px-2 py-1 bg-white rounded text-slate-600">{{ book.category
+                                            }}</span>
+                                        <span class="text-xs text-slate-500">{{ book.availableCopies }}/{{
+                                            book.totalCopies
+                                            }}</span>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button (click)="editBook(book)"
+                                            class="flex-1 text-xs px-3 py-1.5 bg-sky-500 hover:bg-sky-600 text-white rounded-lg font-medium transition-colors">
+                                            Edit
+                                        </button>
+                                        <button (click)="deleteBook(book)"
+                                            class="flex-1 text-xs px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors">
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Borrowing Management Section -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="p-6 border-b border-slate-100">
+                        <h3 class="text-slate-800 font-bold">Book Borrowing Management</h3>
+                    </div>
+                    <div class="p-6 space-y-6">
+                        <!-- Pending Requests -->
+                        <div>
+                            <h4 class="text-sm font-semibold text-slate-700 mb-3">Pending Requests ({{
+                                getPendingBorrows().length }})</h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+                                            <th class="px-4 py-3 font-semibold">Student</th>
+                                            <th class="px-4 py-3 font-semibold">Book</th>
+                                            <th class="px-4 py-3 font-semibold">Request Date</th>
+                                            <th class="px-4 py-3 font-semibold">Due Date</th>
+                                            <th class="px-4 py-3 font-semibold text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-100">
+                                        <tr *ngFor="let borrow of getPendingBorrows()"
+                                            class="hover:bg-slate-50/50 transition-colors">
+                                            <td class="px-4 py-3 text-sm text-slate-800">
+                                                <div class="font-medium">{{ borrow.studentName }}</div>
+                                                <div class="text-xs text-slate-500 font-mono">{{ borrow.studentId }}
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-3 text-sm text-slate-800 font-medium">{{ borrow.bookTitle
+                                                }}
+                                            </td>
+                                            <td class="px-4 py-3 text-sm text-slate-500">{{ borrow.borrowDate |
+                                                date:'short'
+                                                }}</td>
+                                            <td class="px-4 py-3 text-sm text-slate-500">{{ borrow.dueDate |
+                                                date:'mediumDate' }}</td>
+                                            <td class="px-4 py-3 text-right">
+                                                <div class="flex gap-2 justify-end">
+                                                    <button (click)="approveBorrowRequest(borrow)"
+                                                        class="text-xs px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg font-medium transition-colors">
+                                                        Approve
+                                                    </button>
+                                                    <button (click)="rejectBorrowRequest(borrow)"
+                                                        class="text-xs px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors">
+                                                        Reject
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr *ngIf="getPendingBorrows().length === 0">
+                                            <td colspan="5" class="px-4 py-6 text-center text-slate-400 text-sm">No
+                                                pending
+                                                requests</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Currently Borrowed Books -->
+                        <div>
+                            <h4 class="text-sm font-semibold text-slate-700 mb-3">Currently Borrowed ({{
+                                getApprovedBorrows().length }})</h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+                                            <th class="px-4 py-3 font-semibold">Student</th>
+                                            <th class="px-4 py-3 font-semibold">Book</th>
+                                            <th class="px-4 py-3 font-semibold">Borrowed</th>
+                                            <th class="px-4 py-3 font-semibold">Due Date</th>
+                                            <th class="px-4 py-3 font-semibold text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-100">
+                                        <tr *ngFor="let borrow of getApprovedBorrows()"
+                                            class="hover:bg-slate-50/50 transition-colors"
+                                            [class.bg-red-50]="isOverdue(borrow)">
+                                            <td class="px-4 py-3 text-sm text-slate-800">
+                                                <div class="font-medium">{{ borrow.studentName }}</div>
+                                                <div class="text-xs text-slate-500 font-mono">{{ borrow.studentId }}
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-3 text-sm text-slate-800 font-medium">{{ borrow.bookTitle
+                                                }}
+                                            </td>
+                                            <td class="px-4 py-3 text-sm text-slate-500">{{ borrow.borrowDate |
+                                                date:'mediumDate' }}</td>
+                                            <td class="px-4 py-3 text-sm" [class.text-red-600]="isOverdue(borrow)"
+                                                [class.font-bold]="isOverdue(borrow)"
+                                                [class.text-slate-500]="!isOverdue(borrow)">
+                                                {{ borrow.dueDate | date:'mediumDate' }}
+                                                <span *ngIf="isOverdue(borrow)" class="block text-xs text-red-500 mt-1">
+                                                    {{ getDaysOverdue(borrow) }} days overdue
+                                                </span>
+                                            </td>
+                                            <td class="px-4 py-3 text-right">
+                                                <div class="flex gap-2 justify-end flex-wrap max-w-[300px] ml-auto">
+                                                    <!-- Overdue Reminder -->
+                                                    <button *ngIf="isOverdue(borrow) && borrow.status === 'approved'"
+                                                        (click)="sendOverdueReminder(borrow)"
+                                                        class="text-xs px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-medium transition-colors">
+                                                        Reminder
+                                                    </button>
+
+                                                    <!-- Pay Fine Button -->
+                                                    <button *ngIf="borrow.fineStatus === 'unpaid'"
+                                                        (click)="markFineAsPaid(borrow)"
+                                                        class="text-xs px-3 py-1.5 bg-rose-500 hover:bg-rose-600 text-white rounded-lg font-medium transition-colors flex items-center gap-1">
+                                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24"
+                                                            stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                        </svg>
+                                                        Pay Fine
+                                                    </button>
+
+                                                    <!-- Return Button -->
+                                                    <button *ngIf="borrow.status === 'approved'"
+                                                        (click)="markAsReturned(borrow)"
+                                                        class="text-xs px-3 py-1.5 bg-sky-500 hover:bg-sky-600 text-white rounded-lg font-medium transition-colors">
+                                                        Returned
+                                                    </button>
+
+                                                    <!-- Mark Lost Button -->
+                                                    <button *ngIf="borrow.status === 'approved'"
+                                                        (click)="markBookAsLost(borrow)"
+                                                        class="text-xs px-3 py-1.5 bg-slate-500 hover:bg-slate-600 text-white rounded-lg font-medium transition-colors"
+                                                        title="Mark as Lost">
+                                                        Lost
+                                                    </button>
+
+                                                    <!-- Lost Status Indicator -->
+                                                    <span *ngIf="borrow.status === 'lost'"
+                                                        class="px-2 py-1 bg-red-100 text-red-700 text-xs font-bold rounded">
+                                                        LOST (₱{{ borrow.lostPenalty }})
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr *ngIf="getApprovedBorrows().length === 0">
+                                            <td colspan="5" class="px-4 py-6 text-center text-slate-400 text-sm">No
+                                                books
+                                                currently borrowed</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Student Directory Table -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="p-6 border-b border-slate-100">
+                        <h3 class="text-slate-800 font-bold">Registered Students Directory</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+                                    <th class="px-6 py-4 font-semibold">Student ID</th>
+                                    <th class="px-6 py-4 font-semibold">Full Name</th>
+                                    <th class="px-6 py-4 font-semibold">Pronouns</th>
+                                    <th class="px-6 py-4 font-semibold">Registered Date</th>
+                                    <th class="px-6 py-4 font-semibold text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr *ngFor="let student of students" class="hover:bg-slate-50/50 transition-colors">
+                                    <td class="px-6 py-4 text-sm font-medium text-slate-900 font-mono">{{
+                                        student.studentId
+                                        }}</td>
+                                    <td class="px-6 py-4 text-sm text-slate-600 font-medium">{{ student.fullName }}</td>
+                                    <td class="px-6 py-4 text-sm text-slate-500">
+                                        <span *ngIf="student.pronouns"
+                                            class="px-2 py-1 bg-sky-50 text-sky-700 rounded-md text-xs font-medium">
+                                            {{ student.pronouns }}
+                                        </span>
+                                        <span *ngIf="!student.pronouns" class="text-slate-400 text-xs">Not
+                                            specified</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-slate-500">{{ student.registeredAt |
+                                        date:'mediumDate'
+                                        }}</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button (click)="viewQR(student)"
+                                            class="text-sky-600 hover:text-sky-800 text-sm font-medium px-3 py-1 bg-sky-50 rounded-lg hover:bg-sky-100 transition-colors">
+                                            View ID
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="students.length === 0">
+                                    <td colspan="5" class="px-6 py-8 text-center text-slate-400 text-sm">No students
+                                        registered yet.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <!-- End Book Catalog View -->
+
+        </div>
+    </main>
+
+    <!-- Edit Book Modal -->
+    <div *ngIf="selectedBookForEdit"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in"
+        (click)="closeEditModal()">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            (click)="$event.stopPropagation()">
+            <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+                <h3 class="text-xl font-bold text-slate-800">Edit Book</h3>
+                <button (click)="closeEditModal()" class="text-slate-400 hover:text-slate-600">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <form (ngSubmit)="updateBookData()" class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Title *</label>
+                        <input type="text" [(ngModel)]="editBookData.title" name="title" required
+                            class="w-full px-4 py-2 bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 rounded-xl outline-none transition-all text-slate-900">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Author *</label>
+                        <input type="text" [(ngModel)]="editBookData.author" name="author" required
+                            class="w-full px-4 py-2 bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 rounded-xl outline-none transition-all text-slate-900">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Category *</label>
+                        <input type="text" [(ngModel)]="editBookData.category" name="category" required
+                            class="w-full px-4 py-2 bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 rounded-xl outline-none transition-all text-slate-900">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">ISBN</label>
+                        <input type="text" [(ngModel)]="editBookData.isbn" name="isbn"
+                            class="w-full px-4 py-2 bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 rounded-xl outline-none transition-all text-slate-900">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Description</label>
+                        <textarea [(ngModel)]="editBookData.description" name="description" rows="3"
+                            class="w-full px-4 py-2 bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 rounded-xl outline-none transition-all text-slate-900"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Cover Image</label>
+                        <div class="flex items-center gap-4">
+                            <label
+                                class="relative cursor-pointer bg-white border border-slate-200 hover:border-sky-500 rounded-xl px-4 py-2 transition-all group">
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-sky-600">Choose
+                                    Image</span>
+                                <input type="file" (change)="onFileSelected($event, true)" accept="image/*"
+                                    class="hidden">
+                            </label>
+                            <span *ngIf="isUploading"
+                                class="text-xs text-sky-500 font-medium animate-pulse">Uploading...</span>
+                            <img *ngIf="editBookData.coverUrl" [src]="editBookData.coverUrl"
+                                class="h-10 w-10 object-cover rounded-lg border border-slate-200 bg-slate-50">
+                            <input type="hidden" [(ngModel)]="editBookData.coverUrl" name="coverUrl">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Total Copies</label>
+                            <input type="number" [(ngModel)]="editBookData.totalCopies" name="totalCopies" min="0"
+                                class="w-full px-4 py-2 bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200rounded-xl outline-none transition-all text-slate-900">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Available</label>
+                            <input type="number" [(ngModel)]="editBookData.availableCopies" name="availableCopies"
+                                min="0"
+                                class="w-full px-4 py-2 bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 rounded-xl outline-none transition-all text-slate-900">
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <button type="submit"
+                        [disabled]="!editBookData.title || !editBookData.author || !editBookData.category || isEditingBook"
+                        class="flex-1 px-6 py-3 bg-sky-500 hover:bg-sky-600 disabled:bg-slate-300 text-white rounded-xl font-bold transition-all">
+                        {{ isEditingBook ? 'Saving...' : 'Save Changes' }}
+                    </button>
+                    <button type="button" (click)="closeEditModal()"
+                        class="px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold transition-all">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- QR Modal Overlay -->
+    <div *ngIf="selectedStudent"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in"
+        (click)="closeQRModal()">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 relative" (click)="$event.stopPropagation()">
+            <button (click)="closeQRModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <div class="text-center">
+                <h3 class="text-xl font-bold text-slate-800 mb-1">Student ID Card</h3>
+                <p class="text-slate-500 text-sm mb-6">Generated for library access</p>
+
+                <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-inner mb-6 flex justify-center">
+                    <canvas #qrCanvas></canvas>
+                </div>
+
+                <div class="mb-6">
+                    <h4 class="font-bold text-lg text-slate-800">{{ selectedStudent.fullName }}</h4>
+                    <p class="font-mono text-slate-500">{{ selectedStudent.studentId }}</p>
+                </div>
+
+                <button (click)="downloadCard()"
+                    class="w-full py-3 bg-sky-500 hover:bg-sky-600 text-white rounded-xl font-bold shadow-lg shadow-sky-500/25 transition-all mb-3">
+                    Download ID Card
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="fixed top-4 right-4 z-50 space-y-2">
+        <div *ngFor="let toast of (toastService.toasts$ | async)"
+            class="min-w-80 max-w-md px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-slide-in" [ngClass]="{
+                'bg-green-500 text-white': toast.type === 'success',
+                'bg-red-500 text-white': toast.type === 'error',
+                'bg-blue-500 text-white': toast.type === 'info',
+                'bg-yellow-500 text- white': toast.type === 'warning'
+            }">
+            <!-- Icon -->
+            <svg *ngIf="toast.type === 'success'" class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+            </svg>
+            <svg *ngIf="toast.type === 'error'" class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clip-rule="evenodd" />
+            </svg>
+            <svg *ngIf="toast.type === 'info'" class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clip-rule="evenodd" />
+            </svg>
+            <svg *ngIf="toast.type === 'warning'" class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                    clip-rule="evenodd" />
+            </svg>
+            <!-- Message -->
+            <span class="flex-1">{{ toast.message }}</span>
+            <!-- Close button -->
+            <button (click)="toastService.remove(toast.id)" class="flex-shrink-0 hover:opacity-75">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                        clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+</div>

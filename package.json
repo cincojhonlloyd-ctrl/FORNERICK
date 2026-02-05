@@ -1,0 +1,62 @@
+{
+  "name": "library-system",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "start:student": "ng serve student-portal --port 4201",
+    "build": "node --max-old-space-size=4096 node_modules/@angular/cli/bin/ng build",
+    "build:student": "node --max-old-space-size=4096 node_modules/@angular/cli/bin/ng build student-portal --configuration production",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "serve:ssr:library-system": "node dist/library-system/server/server.mjs",
+    "deploy": "npm run build && firebase deploy --only hosting"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "packageManager": "npm@11.6.2",
+  "dependencies": {
+    "@angular/common": "^21.1.0",
+    "@angular/compiler": "^21.1.0",
+    "@angular/core": "^21.1.0",
+    "@angular/forms": "^21.1.0",
+    "@angular/platform-browser": "^21.1.0",
+    "@angular/platform-server": "^21.1.0",
+    "@angular/router": "^21.1.0",
+    "@angular/ssr": "^21.1.1",
+    "@types/qrcode": "^1.5.6",
+    "chart.js": "^4.5.1",
+    "express": "^5.1.0",
+    "firebase": "^12.8.0",
+    "ng2-charts": "^8.0.0",
+    "qrcode": "^1.5.4",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "^0.16.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^21.1.1",
+    "@angular/cli": "^21.1.1",
+    "@angular/compiler-cli": "^21.1.0",
+    "@angular/fire": "^0.0.0",
+    "@tailwindcss/postcss": "^4.1.12",
+    "@types/express": "^5.0.1",
+    "@types/node": "^20.17.19",
+    "jsdom": "^27.1.0",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.12",
+    "typescript": "~5.9.2",
+    "vitest": "^4.0.8"
+  }
+}

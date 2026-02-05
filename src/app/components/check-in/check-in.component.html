@@ -1,0 +1,293 @@
+<div class="min-h-screen bg-[#F0F4F9] flex flex-col items-center justify-center p-4 font-sans relative">
+
+  <!-- Background Decoration (Subtle) -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-blue-100/50 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-indigo-100/50 rounded-full blur-3xl"></div>
+  </div>
+
+  <!-- Header / Logo Area -->
+  <div class="z-10 flex flex-col items-center mb-8 text-center animate-fade-in">
+    <div
+      class="w-20 h-20 bg-white rounded-full shadow-lg flex items-center justify-center mb-4 text-4xl border border-slate-100">
+      📚
+    </div>
+    <h1 class="text-3xl font-bold text-slate-800 tracking-tight">Library System</h1>
+    <p class="text-slate-500 text-sm mt-1 font-medium">University Learning Commons</p>
+  </div>
+
+  <!-- Main Card -->
+  <div
+    class="bg-white w-full max-w-md rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] overflow-hidden z-10 animate-slide-up border border-slate-100 relative">
+
+    <!-- Status Messages (Overlay) -->
+    <div *ngIf="successMessage || errorMessage" class="absolute top-0 left-0 w-full z-50">
+      <div *ngIf="successMessage"
+        class="bg-emerald-500 text-white px-4 py-3 text-sm font-medium flex items-center justify-center gap-2 shadow-md">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        {{ successMessage }}
+      </div>
+      <div *ngIf="errorMessage"
+        class="bg-red-500 text-white px-4 py-3 text-sm font-medium flex items-center justify-center gap-2 shadow-md">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        {{ errorMessage }}
+      </div>
+    </div>
+
+    <!-- ROLE SWITCHER (TOP) -->
+    <div class="px-8 pt-6 pb-2">
+      <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Select User Type</label>
+      <div class="flex bg-slate-100 p-1 rounded-xl">
+        <button (click)="setRole('student')" [class.bg-white]="userRole === 'student'"
+          [class.shadow-sm]="userRole === 'student'" [class.text-slate-800]="userRole === 'student'"
+          class="flex-1 py-2 text-sm font-bold text-slate-400 rounded-lg transition-all">
+          Student
+        </button>
+        <button (click)="setRole('admin')" [class.bg-white]="userRole === 'admin'"
+          [class.shadow-sm]="userRole === 'admin'" [class.text-slate-800]="userRole === 'admin'"
+          class="flex-1 py-2 text-sm font-bold text-slate-400 rounded-lg transition-all">
+          Admin
+        </button>
+      </div>
+    </div>
+
+    <!-- STUDENT CONTENT -->
+    <div *ngIf="userRole === 'student'" class="animate-fade-in">
+      <!-- Mode Tabs -->
+      <div class="flex border-b border-slate-100 mt-4">
+        <button (click)="setMode('scan')" [class.text-sky-600]="currentMode === 'scan'"
+          [class.border-b-2]="currentMode === 'scan'" [class.border-sky-600]="currentMode === 'scan'"
+          class="flex-1 py-3 text-sm font-semibold text-slate-400 hover:text-slate-600 transition-all border-b-2 border-transparent">
+          Scan QR
+        </button>
+        <button (click)="setMode('manual')" [class.text-sky-600]="currentMode === 'manual'"
+          [class.border-b-2]="currentMode === 'manual'" [class.border-sky-600]="currentMode === 'manual'"
+          class="flex-1 py-3 text-sm font-semibold text-slate-400 hover:text-slate-600 transition-all border-b-2 border-transparent">
+          Manual
+        </button>
+        <button (click)="setMode('register')" [class.text-sky-600]="currentMode === 'register'"
+          [class.border-b-2]="currentMode === 'register'" [class.border-sky-600]="currentMode === 'register'"
+          class="flex-1 py-3 text-sm font-semibold text-slate-400 hover:text-slate-600 transition-all border-b-2 border-transparent">
+          Register
+        </button>
+      </div>
+
+      <div class="p-8 pt-6">
+
+        <!-- MODE 1: SCAN -->
+        <div *ngIf="currentMode === 'scan'" class="flex flex-col items-center animate-fade-in relative">
+          <div class="mb-6 relative group cursor-pointer" (click)="qrInput.focus()">
+            <div
+              class="w-48 h-48 border-2 border-slate-200 rounded-xl flex items-center justify-center bg-slate-50 relative overflow-hidden group-hover:border-sky-400 transition-colors">
+              <div
+                class="absolute top-0 left-0 w-full h-1 bg-sky-500 shadow-[0_0_15px_rgba(14,165,233,0.5)] animate-scan">
+              </div>
+              <svg class="w-16 h-16 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+              </svg>
+            </div>
+          </div>
+          <input #qrInput id="qrInput" type="text" [(ngModel)]="scanValue" (keydown.enter)="onScan($event)"
+            class="opacity-0 absolute top-0 left-0 w-px h-px cursor-default" autocomplete="off" autofocus>
+          <h3 class="text-slate-800 font-bold text-lg">Scan Student ID</h3>
+          <p class="text-slate-400 text-sm text-center mt-2 px-4 leading-relaxed">Place your QR code ID card in front of
+            the scanner.</p>
+          <div class="mt-4 p-3 bg-amber-50 rounded-lg border border-amber-100 flex items-center gap-2 animate-pulse">
+            <span class="text-xl">⚠️</span>
+            <p class="text-xs font-bold text-amber-700 text-center uppercase tracking-wide">
+              Don't forget to Scan Out when leaving!
+            </p>
+          </div>
+        </div>
+
+        <!-- MODE 2: MANUAL LOGIN -->
+        <form *ngIf="currentMode === 'manual'" [formGroup]="checkInForm" (ngSubmit)="onSubmit()"
+          class="space-y-5 animate-fade-in">
+          <div class="space-y-1">
+            <h3 class="text-xl font-bold text-slate-800">Student Entry</h3>
+            <p class="text-slate-400 text-sm">Enter details manually.</p>
+          </div>
+          <div class="space-y-4">
+            <div class="relative group">
+              <div
+                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-sky-500 transition-colors">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+              <input formControlName="name" type="text" placeholder="Full Name"
+                class="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all bg-slate-50 focus:bg-white text-sm font-medium">
+            </div>
+            <div class="relative group">
+              <div
+                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-sky-500 transition-colors">
+                <span class="text-base font-bold w-5 text-center leading-none">#</span>
+              </div>
+              <input formControlName="studentId" (input)="validateNumberInput($event, 'studentId')" type="text"
+                placeholder="Student ID"
+                class="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all bg-slate-50 focus:bg-white text-sm font-medium">
+            </div>
+            <div class="relative">
+              <select formControlName="purpose"
+                class="block w-full pl-3 pr-10 py-3 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent sm:text-sm appearance-none bg-slate-50 cursor-pointer text-sm font-medium">
+                <option value="Study">Study</option>
+                <option value="Research">Research</option>
+                <option value="Borrow Book">Borrow Book</option>
+                <option value="Return Book">Return Book</option>
+                <option value="Meeting">Meeting</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <button type="submit" [disabled]="checkInForm.invalid || isLoading"
+            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-[#FACC15] hover:bg-[#EAB308] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 disabled:opacity-50 transition-all text-slate-900">
+            {{ isLoading ? 'Processing...' : 'Login' }}
+          </button>
+        </form>
+
+        <!-- MODE 3: REGISTER -->
+        <div *ngIf="currentMode === 'register'" class="animate-fade-in">
+          <div *ngIf="!qrValue">
+            <div class="space-y-1 mb-5">
+              <h3 class="text-xl font-bold text-slate-800">New Account</h3>
+              <p class="text-slate-400 text-sm">Create an ID to access the library.</p>
+            </div>
+            <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="space-y-5">
+              <div class="relative group">
+                <div
+                  class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-sky-500 transition-colors">
+                  <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <input formControlName="fullName" type="text" placeholder="Full Name"
+                  class="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all bg-slate-50 focus:bg-white text-sm font-medium">
+              </div>
+              <div class="relative group">
+                <div
+                  class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-sky-500 transition-colors">
+                  <span class="text-base font-bold w-5 text-center leading-none">#</span>
+                </div>
+                <input formControlName="studentId" (input)="validateNumberInput($event, 'studentId', true)" type="text"
+                  placeholder="New Student ID"
+                  class="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all bg-slate-50 focus:bg-white text-sm font-medium">
+              </div>
+
+              <div class="relative">
+                <select formControlName="pronouns"
+                  class="block w-full pl-3 pr-10 py-3 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent sm:text-sm appearance-none bg-slate-50 cursor-pointer text-sm font-medium">
+                  <option value="">Select Pronouns (Optional)</option>
+                  <option value="He/Him">He/Him</option>
+                  <option value="She/Her">She/Her</option>
+                  <option value="They/Them">They/Them</option>
+                  <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- 2x2 ID Photo Upload (Temporarily Hidden) -->
+              <!--
+              <div class="space-y-2">
+                <label class="block text-xs font-bold text-slate-600 uppercase">2x2 ID Photo (Required)</label>
+                <div class="flex items-center gap-4">
+                  <label
+                    class="relative cursor-pointer bg-slate-50 border border-slate-200 hover:border-sky-500 rounded-lg px-4 py-2 transition-all group flex items-center gap-2">
+                    <svg class="w-5 h-5 text-slate-400 group-hover:text-sky-600" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span class="text-sm font-medium text-slate-600 group-hover:text-sky-600">{{generatedPhotoUrl ?
+                      'Change Photo' : 'Upload Photo'}}</span>
+                    <input type="file" (change)="onPhotoSelected($event)" accept="image/*" class="hidden">
+                  </label>
+                  <span *ngIf="isUploadingPhoto"
+                    class="text-xs text-sky-500 font-medium animate-pulse">Uploading...</span>
+                  <div *ngIf="generatedPhotoUrl" class="flex flex-col items-center">
+                    <img [src]="generatedPhotoUrl"
+                      class="h-20 w-20 object-cover rounded border-2 border-sky-400 bg-white shadow-sm">
+                    <span class="text-xs text-slate-500 mt-1">2x2 ID Photo</span>
+                  </div>
+                </div>
+              </div>
+              -->
+
+              <button type="submit" [disabled]="registerForm.invalid || isLoading"
+                class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-sky-500 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 disabled:opacity-50 transition-all">
+                {{ isLoading ? 'Creating...' : 'Register' }}
+              </button>
+            </form>
+          </div>
+
+          <div *ngIf="qrValue" class="flex flex-col items-center animate-slide-up text-center">
+            <div
+              class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mb-4 text-2xl">
+              ✓</div>
+            <h3 class="text-xl font-bold text-slate-800 mb-1">ID Created!</h3>
+            <div class="bg-white p-2 rounded-xl shadow-lg border border-slate-100 mb-6">
+              <canvas #qrCanvas></canvas>
+            </div>
+            <button (click)="downloadCard()"
+              class="w-full py-2.5 bg-slate-900 text-white rounded-lg font-medium text-sm hover:bg-slate-800 transition-all mb-2 shadow-lg shadow-slate-900/20">Download
+              ID Card</button>
+            <button (click)="setMode('scan'); qrValue=''; registerForm.reset()"
+              class="text-slate-400 text-sm hover:text-slate-600 font-medium py-2">Back to Scan</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ADMIN CONTENT -->
+    <div *ngIf="userRole === 'admin'" class="p-8 pt-4 animate-fade-in">
+      <form [formGroup]="adminForm" (ngSubmit)="onAdminLogin()" class="space-y-6">
+        <div class="space-y-1 mb-2">
+          <h3 class="text-xl font-bold text-slate-800">Admin Login</h3>
+          <p class="text-slate-400 text-sm">Access the dashboard.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div class="relative group">
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Email Address</label>
+            <input formControlName="email" type="email" placeholder="admin@school.edu"
+              class="block w-full px-4 py-3 border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all bg-slate-50 focus:bg-white text-sm font-medium">
+          </div>
+
+          <div class="relative group">
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Password</label>
+            <input formControlName="password" type="password" placeholder="••••••••"
+              class="block w-full px-4 py-3 border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all bg-slate-50 focus:bg-white text-sm font-medium">
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="adminForm.invalid || isLoading"
+          class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 disabled:opacity-50 transition-all">
+          {{ isLoading ? 'Verifying...' : 'Login as Admin' }}
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <div class="mt-8 text-center animate-fade-in space-y-2">
+    <p class="text-slate-400 text-xs">Currently in Library: <span
+        class="font-bold text-slate-600">{{entriesCount}}</span></p>
+  </div>
+
+</div>

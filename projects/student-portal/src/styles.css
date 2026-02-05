@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+:root {
+    /* Premium Palette */
+    --color-bg-primary: #0f172a;
+    /* Deep Midnight */
+    --color-bg-card: rgba(255, 255, 255, 0.08);
+    /* Transparent White */
+
+    --color-primary: #38bdf8;
+    /* Vibrant Sky Blue */
+    --color-primary-light: #7dd3fc;
+
+    --color-action: #10b981;
+    /* Emerald Green */
+    --color-action-hover: #059669;
+
+    --color-error: #f43f5e;
+    --color-text-main: #f8fafc;
+    --color-text-light: #94a3b8;
+
+    /* Glassmorphism Tokens */
+    --glass-blur: blur(12px);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.125);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    --gradient-accent: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+}
+
+body {
+    background: var(--gradient-primary);
+    background-attachment: fixed;
+    color: var(--color-text-main);
+    font-family: 'Outfit', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Icon Utilities */
+.icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    line-height: 1;
+}
+
+.icon svg {
+    width: 1.25em;
+    height: 1.25em;
+    fill: currentColor;
+}
+
+.icon-sm svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+.icon-md svg {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.icon-lg svg {
+    width: 2rem;
+    height: 2rem;
+}
+
+.icon-xl svg {
+    width: 3rem;
+    height: 3rem;
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.animate-slide-in {
+    animation: slide-in 0.3s ease-out forwards;
+}

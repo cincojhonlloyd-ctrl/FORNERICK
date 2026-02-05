@@ -1,0 +1,484 @@
+<div class="flex h-screen bg-slate-100 font-sans overflow-hidden relative">
+
+    <!-- Mobile Backdrop -->
+    <div *ngIf="isMobileMenuOpen" (click)="toggleMobileMenu()"
+        class="fixed inset-0 bg-slate-900/50 z-40 md:hidden backdrop-blur-sm transition-opacity"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside [class.translate-x-0]="isMobileMenuOpen" [class.-translate-x-full]="!isMobileMenuOpen"
+        class="sidebar-bg flex flex-col fixed inset-y-0 left-0 z-50 w-64 transition-transform duration-300 transform md:relative md:translate-x-0">
+        <div class="p-6 flex items-center justify-between gap-3 border-b border-white/10">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-sky-500 flex items-center justify-center text-white font-bold">L</div>
+                <h2 class="text-white font-bold text-lg tracking-wide">Library<span class="text-sky-400">.io</span></h2>
+            </div>
+            <!-- Close Button (Mobile Only) -->
+            <button (click)="toggleMobileMenu()" class="md:hidden text-slate-400 hover:text-white">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <nav class="flex-1 px-4 py-6">
+            <button (click)="setActive('catalog'); isMobileMenuOpen = false" class="menu-item"
+                [class.active]="activeSection === 'catalog'">
+                BOOK CATALOG
+            </button>
+
+            <div class="menu-divider"></div>
+
+            <button (click)="setActive('announcement'); isMobileMenuOpen = false" class="menu-item"
+                [class.active]="activeSection === 'announcement'">
+                ANNOUNCEMENT
+            </button>
+
+            <div class="menu-divider"></div>
+
+            <button (click)="setActive('terms'); isMobileMenuOpen = false" class="menu-item"
+                [class.active]="activeSection === 'terms'">
+                TERMS AND CONDITIONS
+            </button>
+
+            <div class="menu-divider"></div>
+
+            <button (click)="setActive('mybooks'); isMobileMenuOpen = false" class="menu-item"
+                [class.active]="activeSection === 'mybooks'">
+                MY BOOKS
+            </button>
+
+            <div class="menu-divider"></div>
+
+            <button (click)="setActive('settings'); isMobileMenuOpen = false" class="menu-item"
+                [class.active]="activeSection === 'settings'">
+                SETTINGS
+            </button>
+
+
+        </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-8">
+            <div class="flex items-center gap-4">
+                <!-- Hamburger Menu -->
+                <button (click)="toggleMobileMenu()"
+                    class="md:hidden p-2 -ml-2 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+
+                <h1 class="text-xl font-bold text-slate-800">
+                    <span *ngIf="activeSection === 'catalog'">Book Catalog</span>
+                    <span *ngIf="activeSection === 'announcement'">Announcements</span>
+                    <span *ngIf="activeSection === 'terms'">Terms and Conditions</span>
+                    <span *ngIf="activeSection === 'mybooks'">My Borrowed Books</span>
+                    <span *ngIf="activeSection === 'settings'">Settings</span>
+                </h1>
+            </div>
+            <!-- Notification Bell -->
+            <div class="relative mr-4" *ngIf="studentId">
+                <button (click)="toggleNotifications()"
+                    class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors relative">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    </svg>
+                    <!-- Badge -->
+                    <span *ngIf="unreadCount > 0"
+                        class="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center border-2 border-white">
+                        {{ unreadCount }}
+                    </span>
+                </button>
+
+                <!-- Notification Dropdown -->
+                <div *ngIf="showNotifications"
+                    class="absolute right-0 top-full mt-2 w-80 bg-white rounded-xl shadow-xl border border-slate-100 z-50 animate-fade-in-down overflow-hidden">
+                    <div class="px-4 py-3 border-b border-slate-50 flex justify-between items-center">
+                        <h3 class="font-bold text-slate-800">Notifications</h3>
+                        <button (click)="markAllRead()" class="text-xs text-sky-500 font-medium hover:underline">Mark
+                            all read</button>
+                    </div>
+
+                    <div class="max-h-80 overflow-y-auto">
+                        <div *ngFor="let notif of notifications"
+                            class="px-4 py-3 border-b border-slate-50 hover:bg-slate-50 transition-colors"
+                            [class.bg-sky-50]="!notif.read">
+                            <div class="flex gap-3">
+                                <div class="mt-1 flex-shrink-0">
+                                    <div *ngIf="notif.type === 'success'" class="w-2 h-2 rounded-full bg-emerald-500">
+                                    </div>
+                                    <div *ngIf="notif.type === 'error'" class="w-2 h-2 rounded-full bg-red-500"></div>
+                                    <div *ngIf="notif.type === 'info'" class="w-2 h-2 rounded-full bg-sky-500"></div>
+                                    <div *ngIf="notif.type === 'warning'" class="w-2 h-2 rounded-full bg-amber-500">
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-semibold text-slate-800">{{ notif.title }}</p>
+                                    <p class="text-xs text-slate-500 mt-0.5">{{ notif.message }}</p>
+                                    <p class="text-[10px] text-slate-400 mt-2">{{ notif.timestamp | date:'short' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="notifications.length === 0" class="px-4 py-8 text-center text-slate-400">
+                            <p class="text-sm">No notifications yet</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Backdrop -->
+                <div *ngIf="showNotifications" (click)="showNotifications = false"
+                    class="fixed inset-0 z-40 bg-transparent cursor-default"></div>
+            </div>
+
+            <!-- Profile Dropdown -->
+            <div class="relative">
+                <button (click)="toggleProfileMenu()" class="flex items-center gap-2 focus:outline-none group">
+                    <div
+                        class="w-8 h-8 rounded-full bg-sky-100 overflow-hidden border border-sky-200 group-hover:border-sky-400 transition-all">
+                        <img [src]="'https://ui-avatars.com/api/?name=' + (studentName || 'Student') + '&background=e0f2fe&color=0284c7'"
+                            alt="Student">
+                    </div>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <div *ngIf="isProfileMenuOpen"
+                    class="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-1 z-50 animate-fade-in-down">
+                    <div class="px-4 py-3 border-b border-slate-50">
+                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Signed in as</p>
+                        <p class="text-sm font-bold text-slate-800 truncate">{{ studentName || 'Guest' }}</p>
+                    </div>
+                    <button (click)="logout()"
+                        class="w-full text-left px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 flex items-center gap-2 transition-colors">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        Logout
+                    </button>
+                </div>
+
+                <!-- Backdrop -->
+                <div *ngIf="isProfileMenuOpen" (click)="isProfileMenuOpen = false"
+                    class="fixed inset-0 z-40 bg-transparent cursor-default"></div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 relative">
+
+            <!-- Login Overlay if no studentId -->
+            <div *ngIf="!studentId"
+                class="absolute inset-0 z-10 bg-slate-100/80 backdrop-blur-sm flex items-center justify-center p-4">
+                <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full border border-slate-200 text-center">
+                    <div
+                        class="w-16 h-16 bg-sky-100 text-sky-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-800 mb-2">Student Login</h2>
+                    <p class="text-slate-500 mb-6">Enter your Student ID to access the library</p>
+
+                    <div class="space-y-4">
+                        <input #idInput type="tel" inputmode="numeric" pattern="[0-9]*"
+                            placeholder="Student ID (e.g. 123456)"
+                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 focus:border-sky-500 rounded-xl outline-none text-center font-mono text-lg tracking-widest transition-all text-slate-900"
+                            (input)="idInput.value = idInput.value.replace(/[^0-9]/g, '')"
+                            (keyup.enter)="loginWithId(idInput.value)">
+
+                        <button (click)="loginWithId(idInput.value)" [disabled]="isLoginLoading"
+                            class="w-full py-3 bg-sky-500 hover:bg-sky-600 disabled:bg-slate-300 text-white rounded-xl font-bold transition-all shadow-lg shadow-sky-500/25">
+                            {{ isLoginLoading ? 'Verifying...' : 'Access Dashboard' }}
+                        </button>
+
+                        <p *ngIf="loginError" class="text-red-500 text-sm mt-2">{{ loginError }}</p>
+                    </div>
+
+                    <p class="text-xs text-slate-400 mt-6">Don't have an ID? Visit the reception to register.</p>
+
+
+                </div>
+            </div>
+            <!-- Book Catalog Content -->
+            <div *ngIf="activeSection === 'catalog'" class="space-y-6">
+                <!-- Search Bar -->
+                <!-- Search & Filters -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <div class="relative flex-1">
+                            <input type="text" [(ngModel)]="searchQuery" (input)="searchBooks()"
+                                placeholder="Search by title, author, or category..."
+                                class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 rounded-xl outline-none transition-all text-slate-900">
+                            <svg class="w-5 h-5 text-slate-400 absolute left-4 top-3.5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+
+                        <div class="flex flex-wrap gap-4">
+                            <!-- Category -->
+                            <select [(ngModel)]="selectedCategory" (change)="searchBooks()"
+                                class="px-4 py-3 bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 rounded-xl outline-none transition-all text-slate-900 min-w-[140px]">
+                                <option value="all">All Categories</option>
+                                <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+                            </select>
+
+                            <!-- Sort -->
+                            <select [(ngModel)]="sortBy" (change)="searchBooks()"
+                                class="px-4 py-3 bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 rounded-xl outline-none transition-all text-slate-900 min-w-[140px]">
+                                <option value="title">Sort: A-Z</option>
+                                <option value="author">Sort: Author</option>
+                                <option value="date">Sort: Newest</option>
+                            </select>
+
+                            <!-- Availability Toggle -->
+                            <label
+                                class="flex items-center gap-3 cursor-pointer bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl hover:bg-slate-100 transition-all select-none">
+                                <div class="relative">
+                                    <input type="checkbox" [(ngModel)]="showAvailableOnly" (change)="searchBooks()"
+                                        class="sr-only peer">
+                                    <div
+                                        class="w-9 h-5 bg-slate-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-sky-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500">
+                                    </div>
+                                </div>
+                                <span class="text-slate-700 font-medium text-sm">Available Only</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Books Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div *ngFor="let book of filteredBooks" (click)="viewBookDetails(book)"
+                        class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-lg transition-all cursor-pointer group">
+
+                        <!-- Book Cover -->
+                        <div
+                            class="h-48 bg-gradient-to-br from-sky-100 to-purple-100 flex items-center justify-center relative overflow-hidden">
+                            <img *ngIf="book.coverUrl" [src]="book.coverUrl" [alt]="book.title"
+                                class="w-full h-full object-cover">
+                            <div *ngIf="!book.coverUrl" class="text-6xl text-slate-300">📚</div>
+                            <div class="absolute top-2 right-2">
+                                <span *ngIf="book.availableCopies > 0"
+                                    class="px-2 py-1 bg-emerald-500 text-white text-xs font-bold rounded-full">
+                                    Available
+                                </span>
+                                <span *ngIf="book.availableCopies === 0"
+                                    class="px-2 py-1 bg-red-500 text-white text-xs font-bold rounded-full">
+                                    Out of Stock
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Book Info -->
+                        <div class="p-4">
+                            <h3
+                                class="font-bold text-slate-800 text-lg mb-1 line-clamp-2 group-hover:text-sky-600 transition-colors">
+                                {{ book.title }}
+                            </h3>
+                            <p class="text-slate-500 text-sm mb-2">by {{ book.author }}</p>
+                            <div class="flex items-center justify-between">
+                                <span class="px-2 py-1 bg-slate-100 text-slate-600 text-xs font-medium rounded">
+                                    {{ book.category }}
+                                </span>
+                                <span class="text-slate-400 text-xs">
+                                    {{ book.availableCopies }}/{{ book.totalCopies }} copies
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div *ngIf="filteredBooks.length === 0" class="col-span-full">
+                        <div class="bg-white p-12 rounded-2xl shadow-sm border border-slate-100 text-center">
+                            <div class="text-6xl mb-4">📚</div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-2">No books found</h3>
+                            <p class="text-slate-500">Try adjusting your search query</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Announcement Content -->
+            <div *ngIf="activeSection === 'announcement'" class="space-y-4">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <h2 class="text-lg font-bold text-slate-800 mb-4">Library Announcements</h2>
+                    <p class="text-slate-600">No new announcements at this time.</p>
+                </div>
+            </div>
+
+            <!-- Terms Content -->
+            <div *ngIf="activeSection === 'terms'" class="space-y-4">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <h2 class="text-lg font-bold text-slate-800 mb-4">Terms and Conditions</h2>
+                    <div class="text-slate-600 space-y-2">
+                        <p>By using the library system, you agree to:</p>
+                        <ul class="list-disc list-inside ml-4 space-y-1">
+                            <li>Return borrowed books on time</li>
+                            <li>Maintain library property in good condition</li>
+                            <li>Follow library rules and regulations</li>
+                            <li>Respect other library users</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Content -->
+            <div *ngIf="activeSection === 'settings'" class="space-y-4">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <h2 class="text-lg font-bold text-slate-800 mb-4">Account Settings</h2>
+                    <p class="text-slate-600">Settings functionality coming soon...</p>
+                </div>
+            </div>
+
+            <!-- My Books Content -->
+            <div *ngIf="activeSection === 'mybooks'" class="space-y-6">
+                <!-- Active Borrows -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <h2 class="text-lg font-bold text-slate-800 mb-4">Currently Borrowed ({{ getActiveBorrows().length
+                        }})</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div *ngFor="let borrow of getActiveBorrows()"
+                            class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <h3 class="font-bold text-slate-800 mb-1">{{ borrow.bookTitle }}</h3>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">Borrowed:</span>
+                                    <span class="text-slate-700">{{ borrow.borrowDate | date:'mediumDate' }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">Due Date:</span>
+                                    <span class="font-medium"
+                                        [class.text-red-600]="getDaysRemaining(borrow.dueDate) < 3"
+                                        [class.text-slate-700]="getDaysRemaining(borrow.dueDate) >= 3">
+                                        {{ borrow.dueDate | date:'mediumDate' }}
+                                    </span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-slate-500">Days Remaining:</span>
+                                    <span class="font-bold text-lg"
+                                        [class.text-red-600]="getDaysRemaining(borrow.dueDate) < 3"
+                                        [class.text-emerald-600]="getDaysRemaining(borrow.dueDate) >= 7"
+                                        [class.text-amber-600]="getDaysRemaining(borrow.dueDate) >= 3 && getDaysRemaining(borrow.dueDate) < 7">
+                                        {{ getDaysRemaining(borrow.dueDate) }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="getActiveBorrows().length === 0" class="col-span-full text-center py-8">
+                            <div class="text-4xl mb-2">📚</div>
+                            <p class="text-slate-500">You don't have any borrowed books</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Requests -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <h2 class="text-lg font-bold text-slate-800 mb-4">Pending Requests ({{ getPendingBorrows().length
+                        }})</h2>
+                    <div class="space-y-3">
+                        <div *ngFor="let borrow of getPendingBorrows()"
+                            class="flex items-center justify-between p-4 bg-amber-50 rounded-xl border border-amber-200">
+                            <div>
+                                <h3 class="font-bold text-slate-800">{{ borrow.bookTitle }}</h3>
+                                <p class="text-sm text-slate-600">Requested: {{ borrow.borrowDate | date:'short' }}</p>
+                            </div>
+                            <span
+                                class="px-3 py-1 bg-amber-500 text-white text-xs font-bold rounded-full">Pending</span>
+                        </div>
+                        <div *ngIf="getPendingBorrows().length === 0" class="text-center py-4">
+                            <p class="text-slate-500 text-sm">No pending requests</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Book Details Modal -->
+    <div *ngIf="selectedBook"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in"
+        (click)="closeBookDetails()">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            (click)="$event.stopPropagation()">
+            <div class="relative">
+                <!-- Close Button -->
+                <button (click)="closeBookDetails()"
+                    class="absolute top-4 right-4 z-10 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+                <!-- Book Cover -->
+                <div
+                    class="h-64 bg-gradient-to-br from-sky-100 to-purple-100 flex items-center justify-center relative">
+                    <img *ngIf="selectedBook.coverUrl" [src]="selectedBook.coverUrl" [alt]="selectedBook.title"
+                        class="w-full h-full object-cover">
+                    <div *ngIf="!selectedBook.coverUrl" class="text-9xl text-slate-300">📚</div>
+                </div>
+
+                <!-- Book Details -->
+                <div class="p-8">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <h2 class="text-3xl font-bold text-slate-800 mb-2">{{ selectedBook.title }}</h2>
+                            <p class="text-lg text-slate-600 mb-4">by {{ selectedBook.author }}</p>
+                        </div>
+                        <span *ngIf="selectedBook.availableCopies > 0"
+                            class="px-3 py-1 bg-emerald-500 text-white text-sm font-bold rounded-full">
+                            Available
+                        </span>
+                        <span *ngIf="selectedBook.availableCopies === 0"
+                            class="px-3 py-1 bg-red-500 text-white text-sm font-bold rounded-full">
+                            Out of Stock
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <p class="text-sm text-slate-500 mb-1">Category</p>
+                            <p class="font-medium text-slate-800">{{ selectedBook.category }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-500 mb-1">ISBN</p>
+                            <p class="font-medium text-slate-800 font-mono">{{ selectedBook.isbn || 'N/A' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-500 mb-1">Available Copies</p>
+                            <p class="font-medium text-slate-800">{{ selectedBook.availableCopies }} / {{
+                                selectedBook.totalCopies }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-500 mb-1">Added</p>
+                            <p class="font-medium text-slate-800">{{ selectedBook.addedAt | date:'mediumDate' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <h3 class="text-lg font-bold text-slate-800 mb-2">Description</h3>
+                        <p class="text-slate-600 leading-relaxed">{{ selectedBook.description }}</p>
+                    </div>
+
+                    <button *ngIf="selectedBook.id && !isBookBorrowedByMe(selectedBook.id)"
+                        (click)="requestBorrow(selectedBook)"
+                        [disabled]="selectedBook.availableCopies === 0 || isRequesting"
+                        class="w-full py-3 bg-sky-500 hover:bg-sky-600 disabled:bg-slate-300 text-white rounded-xl font-bold shadow-lg transition-all">
+                        {{ isRequesting ? 'Requesting...' : (selectedBook.availableCopies > 0 ? 'Request to Borrow' :
+                        'Currently Unavailable') }}
+                    </button>
+                    <div *ngIf="selectedBook.id && isBookBorrowedByMe(selectedBook.id)"
+                        class="w-full py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-center">
+                        {{ getMyBorrowStatus(selectedBook.id) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

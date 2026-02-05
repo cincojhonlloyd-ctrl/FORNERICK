@@ -1,0 +1,13 @@
+/* Force text color for inputs in Student ID component to override global styles */
+input[type="text"],
+input[type="number"],
+input[type="email"] {
+    color: #0f172a !important;
+    /* slate-900 */
+}
+
+/* Ensure placeholder is visible but lighter */
+input::placeholder {
+    color: #8b8282 !important;
+    /* slate-400 */
+}
